@@ -61,3 +61,51 @@ class Casino:
             return CarreraCaballo()
 
 
+class Caja:
+    def __init__(self, tasaCambio):
+        self.tasaCambio = tasaCambio
+
+    def convertir(self, tipo, cantidad):
+        return cantidad * self.tasaCambio
+
+
+class Apuesta:
+    def __init__(self, monto, tipoJuego):
+        self.monto = monto
+        self.tipoJuego = tipoJuego
+
+    def apostar(self, monto):
+        self.monto = monto
+
+
+class Carta:
+    def __init__(self, valor, palo):
+        self.valor = valor
+        self.palo = palo
+
+
+class Blackjack:
+    def __init__(self):
+        self.manoJugador = []
+        self.manoCrupier = []
+        self.estadoPartida = None
+
+    def jugar(self, apuesta):
+        j = calcular_total_blackjack(self.manoJugador)
+        c = calcular_total_blackjack(self.manoCrupier)
+
+        gano = j <= 21 and (c > 21 or j > c)
+        return Resultado(gano, apuesta.monto * 2)
+
+
+class Poker:
+    def __init__(self):
+        self.manoJugador = []
+        self.manoOponente = []
+
+    def jugar(self, apuesta):
+        total_jugador = sum(valor_poker(carta) for carta in self.manoJugador)
+        total_oponente = sum(valor_poker(carta) for carta in self.manoOponente)
+        return Resultado(total_jugador > total_oponente, apuesta.monto * 2)
+
+
