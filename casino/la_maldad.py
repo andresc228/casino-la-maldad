@@ -109,3 +109,78 @@ class Poker:
         return Resultado(total_jugador > total_oponente, apuesta.monto * 2)
 
 
+class CarreraCaballo:
+    def __init__(self):
+        self.listaCaballos = []
+        self.caballoGanador = None
+
+    def jugar(self, apuesta):
+        return Resultado(self.caballoGanador == "jugador", apuesta.monto * 2)
+
+
+class Caballo:
+    def __init__(self, nombre, posicion):
+        self.nombre = nombre
+        self.posicion = posicion
+
+
+class Resultado:
+    def __init__(self, gano, recompensa):
+        self.gano = gano
+        self.recompensa = recompensa
+
+
+# ---------------- FUNCIONES DE APOYO ---------------- #
+
+def crear_carta():
+    valores = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+    palos = ["♠", "♥", "♦", "♣"]
+    return Carta(random.choice(valores), random.choice(palos))
+
+
+def valor_blackjack(carta):
+    if carta.valor in ["J", "Q", "K"]:
+        return 10
+    if carta.valor == "A":
+        return 11
+    return int(carta.valor)
+
+
+def calcular_total_blackjack(mano):
+    total = 0
+    ases = 0
+
+    for carta in mano:
+        if carta.valor == "A":
+            ases += 1
+        total += valor_blackjack(carta)
+
+    while total > 21 and ases > 0:
+        total -= 10
+        ases -= 1
+
+    return total
+
+
+def valor_poker(carta):
+    if carta.valor == "A":
+        return 14
+    if carta.valor == "K":
+        return 13
+    if carta.valor == "Q":
+        return 12
+    if carta.valor == "J":
+        return 11
+    return int(carta.valor)
+
+
+def color_palo(carta):
+    return "red" if carta.palo in ["♥", "♦"] else "black"
+
+
+def texto_carta(carta):
+    return f"{carta.valor}{carta.palo}"
+
+
+# ---------------- INTERFAZ ---------------- #
+
