@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="casino/banner.png" alt="Casino La Maldad Banner">
+</p>
+
 Casino la maldad es una aplicación desarrollada en Python que busca recrear la
 experiencia de un casino virtual de manera simple y entretenida mediante una interfaz
 gráfica interactiva. El objetivo del proyecto es permitir que el usuario pueda

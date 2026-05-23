@@ -1,21 +1,3 @@
-"""
-CASINO LA MALDAD - Versión profesional mejorada
-Autor: Proyecto académico POO
-Tecnología: Python + Tkinter
-
-Incluye:
-- Registro de jugador.
-- Gestión de saldo en dinero y fichas.
-- Conversión dinero <-> fichas.
-- Sistema de apuestas con validaciones.
-- Blackjack interactivo.
-- Poker simplificado.
-- Carrera de caballos animada.
-- Interfaz gráfica moderna.
-- Manejo de excepciones.
-- Modularización interna por clases.
-"""
-
 import random
 import tkinter as tk
 from dataclasses import dataclass, field
@@ -313,38 +295,55 @@ class CarreraCaballo:
 
 
 # ============================================================
-# INTERFAZ GRÁFICA PREMIUM
+# INTERFAZ GRÁFICA CINEMÁTICA / PREMIUM
 # ============================================================
 
 class CasinoApp:
-    COLOR_FONDO = "#050B0F"
-    COLOR_FONDO_2 = "#081820"
-    COLOR_PANEL = "#0D1F24"
-    COLOR_PANEL_2 = "#102B2C"
-    COLOR_PANEL_3 = "#173D35"
-    COLOR_MESA = "#075A3C"
-    COLOR_MESA_OSCURO = "#053A2A"
+    """Interfaz gráfica profesional del casino.
+
+    IMPORTANTE: Esta clase solo cambia presentación, animaciones y experiencia visual.
+    No modifica las reglas de negocio ni la lógica interna de los juegos.
+    """
+
+    COLOR_FONDO = "#03080D"
+    COLOR_FONDO_2 = "#07131B"
+    COLOR_PANEL = "#0A171B"
+    COLOR_PANEL_2 = "#0E2226"
+    COLOR_PANEL_3 = "#123239"
+    COLOR_PANEL_CLARO = "#173F40"
+    COLOR_MESA = "#07563B"
+    COLOR_MESA_OSCURO = "#043326"
+    COLOR_MESA_LUZ = "#0A7A50"
     COLOR_DORADO = "#F6C453"
-    COLOR_DORADO_2 = "#B88917"
+    COLOR_DORADO_2 = "#C89325"
     COLOR_TEXTO = "#F8F9FA"
     COLOR_TEXTO_SUAVE = "#B7E4C7"
+    COLOR_TEXTO_APAGADO = "#7CA394"
     COLOR_BOTON = "#1B6B4A"
     COLOR_BOTON_HOVER = "#2EA66F"
     COLOR_ERROR = "#FFDD57"
-    FUENTE_TITULO = ("Segoe UI", 30, "bold")
-    FUENTE_SUBTITULO = ("Segoe UI", 13)
+    COLOR_ROJO = "#C1121F"
+
+    FUENTE_TITULO = ("Segoe UI", 31, "bold")
+    FUENTE_SUBTITULO = ("Segoe UI", 12)
     FUENTE_NORMAL = ("Segoe UI", 12)
-    FUENTE_BOTON = ("Segoe UI", 12, "bold")
+    FUENTE_BOTON = ("Segoe UI", 11, "bold")
 
     def __init__(self):
         self.casino = Casino()
         self.particulas = []
+        self.resplandor_activo = True
 
         self.ventana = tk.Tk()
-        self.ventana.title("Casino La Maldad - Ultra Premium")
-        self.ventana.geometry("1180x760")
-        self.ventana.minsize(1050, 680)
+        self.ventana.title("Casino La Maldad | Premium Edition")
+        self.ventana.geometry("1240x800")
+        self.ventana.minsize(1100, 710)
         self.ventana.configure(bg=self.COLOR_FONDO)
+
+        try:
+            self.ventana.iconbitmap("")
+        except Exception:
+            pass
 
         self.frame_principal = tk.Frame(self.ventana, bg=self.COLOR_FONDO)
         self.frame_principal.pack(fill="both", expand=True)
@@ -358,34 +357,57 @@ class CasinoApp:
         self.capa_ui.place(relx=0, rely=0, relwidth=1, relheight=1)
 
         self.crear_encabezado()
-        self.contenedor = tk.Frame(self.capa_ui, bg=self.COLOR_PANEL, bd=0, highlightthickness=1, highlightbackground="#21453D")
-        self.contenedor.pack(fill="both", expand=True, padx=30, pady=20)
+        self.contenedor = tk.Frame(
+            self.capa_ui,
+            bg=self.COLOR_PANEL,
+            bd=0,
+            highlightthickness=1,
+            highlightbackground="#21453D",
+            highlightcolor=self.COLOR_DORADO,
+        )
+        self.contenedor.pack(fill="both", expand=True, padx=30, pady=(16, 28))
 
         self.pantalla_registro()
 
-    # ---------------- UTILIDADES UI PREMIUM ---------------- #
+    # ========================================================
+    # UTILIDADES VISUALES
+    # ========================================================
 
     def crear_fondo_premium(self):
         self.fondo_animado.delete("all")
-        for i in range(0, 760, 8):
-            r = min(18, 5 + i // 60)
-            color = f"#{r:02x}{max(11, 20 + i // 35):02x}{max(15, 25 + i // 45):02x}"
-            self.fondo_animado.create_rectangle(0, i, 2000, i + 8, fill=color, outline="")
+        self.particulas.clear()
+        for i in range(0, 900, 6):
+            r = 3 + min(12, i // 80)
+            g = 8 + min(25, i // 35)
+            b = 13 + min(30, i // 45)
+            color = f"#{r:02x}{g:02x}{b:02x}"
+            self.fondo_animado.create_rectangle(0, i, 2200, i + 6, fill=color, outline="")
 
-        for _ in range(55):
-            x = random.randint(0, 1180)
-            y = random.randint(0, 760)
+        # Luces de ambiente
+        self.fondo_animado.create_oval(-160, 80, 430, 650, fill="#062318", outline="")
+        self.fondo_animado.create_oval(850, -190, 1450, 420, fill="#151006", outline="")
+        self.fondo_animado.create_text(
+            960, 660,
+            text="♠   ♥   ♦   ♣",
+            font=("Segoe UI", 58, "bold"),
+            fill="#071C1C",
+        )
+
+        for _ in range(80):
+            x = random.randint(0, 1240)
+            y = random.randint(0, 820)
             size = random.choice([1, 1, 2, 2, 3])
-            vel = random.choice([0.15, 0.25, 0.35, 0.5])
-            item = self.fondo_animado.create_oval(x, y, x + size, y + size, fill=self.COLOR_DORADO, outline="")
+            vel = random.choice([0.12, 0.18, 0.25, 0.32, 0.45])
+            color = random.choice([self.COLOR_DORADO, "#63E6BE", "#E9C46A"])
+            item = self.fondo_animado.create_oval(x, y, x + size, y + size, fill=color, outline="")
             self.particulas.append([item, vel])
 
     def animar_particulas(self):
         for item, vel in self.particulas:
             self.fondo_animado.move(item, 0, vel)
             coords = self.fondo_animado.coords(item)
-            if coords and coords[1] > 780:
-                self.fondo_animado.move(item, 0, -800)
+            if coords and coords[1] > 840:
+                self.fondo_animado.move(item, 0, -870)
         self.ventana.after(45, self.animar_particulas)
 
     def crear_encabezado(self):
@@ -400,31 +422,46 @@ class CasinoApp:
             text="♛ CASINO LA MALDAD",
             font=self.FUENTE_TITULO,
             bg=self.COLOR_FONDO,
-            fg=self.COLOR_DORADO
+            fg=self.COLOR_DORADO,
         ).pack(anchor="w")
 
         tk.Label(
             izquierda,
-            text="Experiencia premium · Blackjack · Poker · Carrera de caballos",
+            text="Blackjack · Poker · Carrera de caballos · Experiencia premium",
             font=("Segoe UI", 11),
             bg=self.COLOR_FONDO,
-            fg=self.COLOR_TEXTO_SUAVE
+            fg=self.COLOR_TEXTO_SUAVE,
         ).pack(anchor="w", pady=(0, 4))
 
-        insignia = tk.Label(
-            encabezado,
-            text="● LIVE TABLES",
+        derecha = tk.Frame(encabezado, bg=self.COLOR_FONDO)
+        derecha.pack(side="right", pady=14)
+        self.badge_estado = tk.Label(
+            derecha,
+            text="● MESAS ABIERTAS",
             font=("Segoe UI", 11, "bold"),
             bg="#112D25",
             fg="#63E6BE",
             padx=18,
-            pady=8
+            pady=9,
         )
-        insignia.pack(side="right", pady=16)
+        self.badge_estado.pack(side="right", padx=(10, 0))
+
+        tk.Label(
+            derecha,
+            text="PREMIUM EDITION",
+            font=("Segoe UI", 10, "bold"),
+            bg="#231B08",
+            fg=self.COLOR_DORADO,
+            padx=16,
+            pady=9,
+        ).pack(side="right")
 
     def limpiar(self):
         for widget in self.contenedor.winfo_children():
             widget.destroy()
+
+    def easing_suave(self, t):
+        return t * t * (3 - 2 * t)
 
     def efecto_hover(self, boton, color_base, color_hover):
         boton.bind("<Enter>", lambda _e: boton.config(bg=color_hover))
@@ -446,22 +483,55 @@ class CasinoApp:
             pady=10,
             relief="flat",
             cursor="hand2",
-            bd=0
+            bd=0,
         )
         self.efecto_hover(boton, color_base, color_hover)
         return boton
 
-    def crear_tarjeta(self, padre, relleno=True):
-        exterior = tk.Frame(padre, bg="#050805")
-        exterior.pack(pady=20, padx=30, fill="both", expand=relleno)
-        tarjeta = tk.Frame(exterior, bg=self.COLOR_PANEL_2, bd=0, highlightthickness=1, highlightbackground="#2A6F59")
+    def crear_entrada(self, padre, ancho=28):
+        cont = tk.Frame(padre, bg="#D9B650")
+        entrada = tk.Entry(
+            cont,
+            font=("Segoe UI", 15),
+            justify="center",
+            width=ancho,
+            relief="flat",
+            bg="#EEF5F0",
+            fg="#09110D",
+            insertbackground="#09110D",
+        )
+        entrada.pack(padx=2, pady=2, ipady=9)
+        return cont, entrada
+
+    def crear_tarjeta(self, padre, relleno=True, ancho=None):
+        exterior = tk.Frame(padre, bg="#020404")
+        exterior.pack(pady=18, padx=30, fill="both", expand=relleno)
+        tarjeta = tk.Frame(
+            exterior,
+            bg=self.COLOR_PANEL_2,
+            bd=0,
+            highlightthickness=1,
+            highlightbackground="#2A6F59",
+        )
         tarjeta.pack(padx=2, pady=2, fill="both", expand=True)
         return tarjeta
 
     def titulo_pantalla(self, padre, titulo, subtitulo=""):
-        tk.Label(padre, text=titulo, font=("Segoe UI", 26, "bold"), bg=self.COLOR_PANEL_2, fg=self.COLOR_DORADO).pack(pady=(32, 8))
+        tk.Label(
+            padre,
+            text=titulo,
+            font=("Segoe UI", 26, "bold"),
+            bg=self.COLOR_PANEL_2,
+            fg=self.COLOR_DORADO,
+        ).pack(pady=(28, 8))
         if subtitulo:
-            tk.Label(padre, text=subtitulo, font=self.FUENTE_SUBTITULO, bg=self.COLOR_PANEL_2, fg=self.COLOR_TEXTO_SUAVE).pack(pady=(0, 18))
+            tk.Label(
+                padre,
+                text=subtitulo,
+                font=self.FUENTE_SUBTITULO,
+                bg=self.COLOR_PANEL_2,
+                fg=self.COLOR_TEXTO_SUAVE,
+            ).pack(pady=(0, 16))
 
     def mostrar_error(self, mensaje):
         messagebox.showerror("Casino La Maldad", mensaje)
@@ -476,70 +546,112 @@ class CasinoApp:
             raise CantidadInvalidaError("Debes ingresar un número entero válido.")
 
     def color_palo(self, carta: Carta) -> str:
-        return "#C1121F" if carta.palo in ["♥", "♦"] else "#111111"
+        return self.COLOR_ROJO if carta.palo in ["♥", "♦"] else "#111111"
+
+    def panel_saldo(self, padre):
+        jugador = self.casino.obtener_jugador()
+        dinero, fichas = jugador.consultar_saldo()
+        barra = tk.Frame(padre, bg=self.COLOR_PANEL, height=62)
+        barra.pack(fill="x", pady=(0, 8))
+
+        datos = [
+            (f"👤  {jugador.nombre}", self.COLOR_TEXTO),
+            (f"💵  ${dinero:,}".replace(",", "."), "#95D5B2"),
+            (f"🪙  {fichas:,} fichas".replace(",", "."), self.COLOR_DORADO),
+        ]
+        for texto, color in datos:
+            caja = tk.Frame(barra, bg="#0F2528", highlightthickness=1, highlightbackground="#1F4A42")
+            caja.pack(side="left", padx=8, pady=8)
+            tk.Label(
+                caja,
+                text=texto,
+                font=("Segoe UI", 12, "bold"),
+                bg="#0F2528",
+                fg=color,
+                padx=16,
+                pady=9,
+            ).pack()
+
+    # ========================================================
+    # CARTAS Y MESAS
+    # ========================================================
 
     def dibujar_carta(self, canvas, x, y, carta: Optional[Carta], oculta=False, escala=1.0):
-        w, h = int(74 * escala), int(108 * escala)
-        canvas.create_rectangle(x + 6, y + 7, x + w + 6, y + h + 7, fill="#000000", outline="", stipple="gray50")
+        w, h = int(76 * escala), int(112 * escala)
+        canvas.create_rectangle(x + 7, y + 9, x + w + 7, y + h + 9, fill="#000000", outline="", stipple="gray50")
         canvas.create_rectangle(x, y, x + w, y + h, fill="#FFFDF7", outline=self.COLOR_DORADO, width=2)
         canvas.create_rectangle(x + 5, y + 5, x + w - 5, y + h - 5, outline="#D9B650", width=1)
 
         if oculta:
             canvas.create_rectangle(x + 10, y + 10, x + w - 10, y + h - 10, fill="#0A2342", outline="#2D6A9F", width=2)
-            canvas.create_text(x + w / 2, y + h / 2, text="♛", font=("Segoe UI", int(27 * escala), "bold"), fill=self.COLOR_DORADO)
-        else:
-            canvas.create_text(x + 15, y + 18, text=carta.valor, font=("Segoe UI", int(12 * escala), "bold"), fill=self.color_palo(carta))
-            canvas.create_text(x + w - 15, y + h - 18, text=carta.valor, font=("Segoe UI", int(12 * escala), "bold"), fill=self.color_palo(carta))
-            canvas.create_text(x + w / 2, y + h / 2, text=carta.palo, font=("Segoe UI", int(29 * escala), "bold"), fill=self.color_palo(carta))
+            for offset in range(0, w - 22, 12):
+                canvas.create_line(x + 12 + offset, y + 12, x + 24 + offset, y + h - 12, fill="#183D5B", width=2)
+            canvas.create_text(x + w / 2, y + h / 2, text="♛", font=("Segoe UI", int(28 * escala), "bold"), fill=self.COLOR_DORADO)
+            return
+
+        if carta is None:
+            return
+        color = self.color_palo(carta)
+        canvas.create_text(x + 16, y + 18, text=carta.valor, font=("Segoe UI", int(12 * escala), "bold"), fill=color)
+        canvas.create_text(x + 16, y + 36, text=carta.palo, font=("Segoe UI", int(13 * escala), "bold"), fill=color)
+        canvas.create_text(x + w - 16, y + h - 18, text=carta.valor, font=("Segoe UI", int(12 * escala), "bold"), fill=color)
+        canvas.create_text(x + w / 2, y + h / 2 + 4, text=carta.palo, font=("Segoe UI", int(32 * escala), "bold"), fill=color)
 
     def dibujar_mesa_premium(self, canvas, titulo):
         canvas.delete("all")
-        canvas.create_rectangle(0, 0, 1200, 460, fill=self.COLOR_MESA_OSCURO, outline="")
-        for i in range(30):
+        canvas.create_rectangle(0, 0, 1200, 470, fill=self.COLOR_MESA_OSCURO, outline="")
+        for i in range(36):
             color = "#086344" if i % 2 == 0 else "#07563B"
-            canvas.create_oval(80 - i * 7, 20 - i * 3, 1120 + i * 7, 470 + i * 4, outline=color, width=2)
-        canvas.create_oval(60, 30, 1140, 445, outline=self.COLOR_DORADO, width=4)
-        canvas.create_oval(90, 58, 1110, 420, outline="#3EA875", width=2)
-        canvas.create_text(590, 40, text=titulo, fill=self.COLOR_DORADO, font=("Segoe UI", 18, "bold"))
+            canvas.create_oval(80 - i * 7, 16 - i * 3, 1120 + i * 7, 475 + i * 4, outline=color, width=2)
+        canvas.create_oval(56, 26, 1146, 452, outline=self.COLOR_DORADO, width=4)
+        canvas.create_oval(92, 58, 1110, 418, outline="#3EA875", width=2)
+        canvas.create_text(590, 38, text=titulo, fill=self.COLOR_DORADO, font=("Segoe UI", 19, "bold"))
+        canvas.create_text(590, 232, text="LA MALDAD", fill="#0A6A49", font=("Segoe UI", 44, "bold"))
 
     def animar_carta_desde_mazo(self, canvas, destino_x, destino_y, carta, oculta=False):
-        inicio_x, inicio_y = 560, 175
-        pasos = 22
+        inicio_x, inicio_y = 555, 170
+        pasos = 20
         for paso in range(1, pasos + 1):
             progreso = self.easing_suave(paso / pasos)
             x = inicio_x + (destino_x - inicio_x) * progreso
-            y = inicio_y + (destino_y - inicio_y) * progreso
+            y = inicio_y + (destino_y - inicio_y) * progreso - 10 * (1 - abs(0.5 - progreso))
             temporal = "carta_animada"
             canvas.delete(temporal)
             canvas.create_rectangle(x + 7, y + 8, x + 87, y + 122, fill="#000000", outline="", tags=temporal)
             canvas.create_rectangle(x, y, x + 80, y + 114, fill="#FFFDF7", outline=self.COLOR_DORADO, width=3, tags=temporal)
-            canvas.create_text(x + 40, y + 57, text="♛" if oculta else carta.texto(), font=("Segoe UI", 23, "bold"), fill=self.COLOR_DORADO if oculta else self.color_palo(carta), tags=temporal)
+            canvas.create_text(
+                x + 40,
+                y + 57,
+                text="♛" if oculta else carta.texto(),
+                font=("Segoe UI", 23, "bold"),
+                fill=self.COLOR_DORADO if oculta else self.color_palo(carta),
+                tags=temporal,
+            )
             canvas.update()
-            self.ventana.after(10)
+            self.ventana.after(8)
         canvas.delete("carta_animada")
 
-    def easing_suave(self, t):
-        return t * t * (3 - 2 * t)
-
-    def panel_saldo(self, padre):
-        jugador = self.casino.obtener_jugador()
-        dinero, fichas = jugador.consultar_saldo()
-        barra = tk.Frame(padre, bg=self.COLOR_PANEL, height=58)
-        barra.pack(fill="x", pady=(0, 10))
-        datos = [(f"👤 {jugador.nombre}", self.COLOR_TEXTO), (f"💵 ${dinero}", "#95D5B2"), (f"🪙 {fichas} fichas", self.COLOR_DORADO)]
-        for texto, color in datos:
-            tk.Label(barra, text=texto, font=("Segoe UI", 13, "bold"), bg=self.COLOR_PANEL, fg=color, padx=14, pady=12).pack(side="left")
-
-    # ---------------- PANTALLAS ---------------- #
+    # ========================================================
+    # PANTALLAS GENERALES
+    # ========================================================
 
     def pantalla_registro(self):
         self.limpiar()
         tarjeta = self.crear_tarjeta(self.contenedor)
-        tk.Label(tarjeta, text="♛", font=("Segoe UI", 54, "bold"), bg=self.COLOR_PANEL_2, fg=self.COLOR_DORADO).pack(pady=(58, 0))
-        self.titulo_pantalla(tarjeta, "Bienvenido al casino", "Registra tu nombre para iniciar una experiencia de casino premium.")
-        entrada_nombre = tk.Entry(tarjeta, font=("Segoe UI", 16), justify="center", width=32, relief="flat", bg="#EEF5F0", fg="#09110D")
-        entrada_nombre.pack(pady=22, ipady=10)
+        tk.Label(tarjeta, text="♛", font=("Segoe UI", 58, "bold"), bg=self.COLOR_PANEL_2, fg=self.COLOR_DORADO).pack(pady=(50, 0))
+        self.titulo_pantalla(tarjeta, "Bienvenido al casino", "Registra tu nombre para entrar a una experiencia visual premium.")
+
+        cont_entrada, entrada_nombre = self.crear_entrada(tarjeta, 32)
+        cont_entrada.pack(pady=20)
         entrada_nombre.focus()
+
+        tk.Label(
+            tarjeta,
+            text="Tip: convierte dinero en fichas antes de apostar.",
+            font=("Segoe UI", 10),
+            bg=self.COLOR_PANEL_2,
+            fg=self.COLOR_TEXTO_APAGADO,
+        ).pack(pady=(0, 14))
 
         def registrar():
             try:
@@ -548,6 +660,7 @@ class CasinoApp:
             except CasinoError as error:
                 self.mostrar_error(str(error))
 
+        entrada_nombre.bind("<Return>", lambda _e: registrar())
         self.crear_boton(tarjeta, "Entrar al casino", registrar, 24, self.COLOR_DORADO).pack(pady=10)
 
     def pantalla_menu(self):
@@ -555,20 +668,24 @@ class CasinoApp:
         self.panel_saldo(self.contenedor)
         tarjeta = self.crear_tarjeta(self.contenedor)
         self.titulo_pantalla(tarjeta, "Menú principal", "Elige una mesa, convierte fichas o entra a la carrera.")
+
         grid = tk.Frame(tarjeta, bg=self.COLOR_PANEL_2)
         grid.pack(pady=8)
         opciones = [
-            ("💱 Convertir dinero / fichas", "Gestiona tu saldo", self.pantalla_convertir),
-            ("🂡 Jugar Blackjack", "Pide cartas y vence al crupier", lambda: self.pantalla_apuesta("blackjack")),
-            ("♠ Jugar Poker", "Revela flop, turn y river", lambda: self.pantalla_apuesta("poker")),
-            ("🏇 Carrera de caballos", "Apuesta por tu ganador", lambda: self.pantalla_apuesta("carrera")),
+            ("💱", "Convertir saldo", "Dinero ↔ fichas", self.pantalla_convertir),
+            ("🂡", "Blackjack", "Pide cartas y vence al crupier", lambda: self.pantalla_apuesta("blackjack")),
+            ("♠", "Poker", "Flop · Turn · River", lambda: self.pantalla_apuesta("poker")),
+            ("🏇", "Carrera de caballos", "Apuesta por tu ganador", lambda: self.pantalla_apuesta("carrera")),
         ]
-        for i, (titulo, desc, comando) in enumerate(opciones):
+        for i, (icono, titulo, desc, comando) in enumerate(opciones):
             card = tk.Frame(grid, bg=self.COLOR_PANEL_3, highlightthickness=1, highlightbackground="#2A6F59")
             card.grid(row=i // 2, column=i % 2, padx=14, pady=14, sticky="nsew")
-            tk.Label(card, text=titulo, font=("Segoe UI", 15, "bold"), bg=self.COLOR_PANEL_3, fg=self.COLOR_DORADO).pack(padx=24, pady=(18, 4))
-            tk.Label(card, text=desc, font=("Segoe UI", 10), bg=self.COLOR_PANEL_3, fg=self.COLOR_TEXTO_SUAVE).pack(pady=(0, 14))
-            self.crear_boton(card, "Abrir", comando, 20).pack(pady=(0, 18))
+            card.configure(width=360, height=165)
+            card.grid_propagate(False)
+            tk.Label(card, text=icono, font=("Segoe UI", 27, "bold"), bg=self.COLOR_PANEL_3, fg=self.COLOR_DORADO).pack(pady=(15, 0))
+            tk.Label(card, text=titulo, font=("Segoe UI", 15, "bold"), bg=self.COLOR_PANEL_3, fg=self.COLOR_DORADO).pack(padx=24, pady=(2, 3))
+            tk.Label(card, text=desc, font=("Segoe UI", 10), bg=self.COLOR_PANEL_3, fg=self.COLOR_TEXTO_SUAVE).pack(pady=(0, 10))
+            self.crear_boton(card, "Abrir mesa", comando, 18).pack(pady=(0, 14))
 
     def pantalla_convertir(self):
         self.limpiar()
@@ -576,8 +693,9 @@ class CasinoApp:
         tarjeta = self.crear_tarjeta(self.contenedor)
         self.titulo_pantalla(tarjeta, "Conversión de saldo", "Convierte tu dinero en fichas o tus fichas en dinero.")
         tk.Label(tarjeta, text="Cantidad", font=("Segoe UI", 13, "bold"), bg=self.COLOR_PANEL_2, fg=self.COLOR_TEXTO).pack()
-        entrada = tk.Entry(tarjeta, font=("Segoe UI", 15), justify="center", width=22, relief="flat", bg="#EEF5F0")
-        entrada.pack(pady=14, ipady=8)
+
+        cont, entrada = self.crear_entrada(tarjeta, 22)
+        cont.pack(pady=14)
 
         def convertir(tipo):
             try:
@@ -601,8 +719,8 @@ class CasinoApp:
         nombres = {"blackjack": "Blackjack", "poker": "Poker", "carrera": "Carrera de caballos"}
         tarjeta = self.crear_tarjeta(self.contenedor)
         self.titulo_pantalla(tarjeta, f"Apuesta para {nombres[tipo_juego]}", "Ingresa la cantidad de fichas que deseas apostar.")
-        entrada = tk.Entry(tarjeta, font=("Segoe UI", 15), justify="center", width=22, relief="flat", bg="#EEF5F0")
-        entrada.pack(pady=18, ipady=8)
+        cont, entrada = self.crear_entrada(tarjeta, 22)
+        cont.pack(pady=18)
 
         def iniciar():
             try:
@@ -620,20 +738,24 @@ class CasinoApp:
             except CasinoError as error:
                 self.mostrar_error(str(error))
 
+        entrada.bind("<Return>", lambda _e: iniciar())
         self.crear_boton(tarjeta, "Iniciar juego", iniciar, 20, self.COLOR_DORADO).pack(pady=8)
         self.crear_boton(tarjeta, "Volver", self.pantalla_menu, 18).pack(pady=8)
 
-    # ---------------- BLACKJACK ---------------- #
+    # ========================================================
+    # BLACKJACK
+    # ========================================================
 
     def pantalla_blackjack(self, apuesta: Apuesta):
         self.limpiar()
         self.panel_saldo(self.contenedor)
         juego: Blackjack = self.casino.seleccionar_juego("blackjack")
         juego.iniciar()
+
         zona = tk.Frame(self.contenedor, bg=self.COLOR_PANEL_2)
         zona.pack(fill="both", expand=True, padx=20, pady=10)
-        canvas = tk.Canvas(zona, width=1080, height=430, bg=self.COLOR_MESA, highlightthickness=0)
-        canvas.pack(pady=15)
+        canvas = tk.Canvas(zona, width=1100, height=440, bg=self.COLOR_MESA, highlightthickness=0)
+        canvas.pack(pady=14)
         mensaje = tk.Label(zona, text="Mesa abierta. Decide si pides carta o te plantas.", font=("Segoe UI", 13, "bold"), bg=self.COLOR_PANEL_2, fg=self.COLOR_DORADO)
         mensaje.pack(pady=8)
         controles = tk.Frame(zona, bg=self.COLOR_PANEL_2)
@@ -641,27 +763,34 @@ class CasinoApp:
 
         def redibujar(mostrar_crupier=True, animar=False):
             self.dibujar_mesa_premium(canvas, "BLACKJACK")
-            canvas.create_text(130, 85, text="CRUPIER", fill="white", font=("Segoe UI", 15, "bold"))
+            canvas.create_text(130, 82, text="CRUPIER", fill="white", font=("Segoe UI", 15, "bold"))
             canvas.create_text(130, 260, text="JUGADOR", fill="white", font=("Segoe UI", 15, "bold"))
+            canvas.create_rectangle(760, 125, 1045, 272, fill="#092B22", outline=self.COLOR_DORADO, width=2)
+            canvas.create_text(902, 153, text="MARCADOR", fill=self.COLOR_TEXTO_SUAVE, font=("Segoe UI", 11, "bold"))
+
             for i, carta in enumerate(juego.mano_crupier):
-                x, y = 95 + i * 88, 105
-                if animar: self.animar_carta_desde_mazo(canvas, x, y, carta, oculta=(not mostrar_crupier and i == 1))
+                x, y = 95 + i * 88, 103
+                if animar:
+                    self.animar_carta_desde_mazo(canvas, x, y, carta, oculta=(not mostrar_crupier and i == 1))
                 self.dibujar_carta(canvas, x, y, carta, oculta=(not mostrar_crupier and i == 1))
             for i, carta in enumerate(juego.mano_jugador):
                 x, y = 95 + i * 88, 285
-                if animar: self.animar_carta_desde_mazo(canvas, x, y, carta)
+                if animar:
+                    self.animar_carta_desde_mazo(canvas, x, y, carta)
                 self.dibujar_carta(canvas, x, y, carta)
+
             total_j = juego.calcular_total(juego.mano_jugador)
             total_c = juego.calcular_total(juego.mano_crupier) if mostrar_crupier else "?"
-            canvas.create_rectangle(790, 145, 1030, 255, fill="#092B22", outline=self.COLOR_DORADO, width=2)
-            canvas.create_text(910, 175, text=f"Crupier: {total_c}", fill="white", font=("Segoe UI", 15, "bold"))
-            canvas.create_text(910, 220, text=f"Jugador: {total_j}", fill=self.COLOR_DORADO, font=("Segoe UI", 15, "bold"))
+            canvas.create_text(902, 192, text=f"Crupier: {total_c}", fill="white", font=("Segoe UI", 16, "bold"))
+            canvas.create_text(902, 230, text=f"Jugador: {total_j}", fill=self.COLOR_DORADO, font=("Segoe UI", 16, "bold"))
+            canvas.create_text(902, 258, text=f"Apuesta: {apuesta.monto} fichas", fill=self.COLOR_TEXTO_SUAVE, font=("Segoe UI", 10, "bold"))
 
         def finalizar(resultado: Resultado):
             jugador = self.casino.obtener_jugador()
             jugador.sumar_fichas(resultado.recompensa)
-            mensaje.config(text=resultado.mensaje)
-            for widget in controles.winfo_children(): widget.destroy()
+            mensaje.config(text=resultado.mensaje, fg="#95D5B2" if resultado.gano else self.COLOR_ERROR)
+            for widget in controles.winfo_children():
+                widget.destroy()
             self.crear_boton(controles, "Volver al menú", self.pantalla_menu, 18).pack(side="left", padx=8)
 
         def pedir():
@@ -683,18 +812,21 @@ class CasinoApp:
         self.crear_boton(controles, "Plantarse", plantarse, 16).pack(side="left", padx=8)
         self.crear_boton(controles, "Rendirse", self.pantalla_menu, 16).pack(side="left", padx=8)
 
-    # ---------------- POKER ---------------- #
+    # ========================================================
+    # POKER
+    # ========================================================
 
     def pantalla_poker(self, apuesta: Apuesta):
         self.limpiar()
         self.panel_saldo(self.contenedor)
         juego: Poker = self.casino.seleccionar_juego("poker")
         juego.iniciar()
+
         zona = tk.Frame(self.contenedor, bg=self.COLOR_PANEL_2)
         zona.pack(fill="both", expand=True, padx=20, pady=10)
-        canvas = tk.Canvas(zona, width=1080, height=430, bg=self.COLOR_MESA, highlightthickness=0)
-        canvas.pack(pady=15)
-        mensaje = tk.Label(zona, text="Revela las cartas de la mesa.", font=("Segoe UI", 13, "bold"), bg=self.COLOR_PANEL_2, fg=self.COLOR_DORADO)
+        canvas = tk.Canvas(zona, width=1100, height=440, bg=self.COLOR_MESA, highlightthickness=0)
+        canvas.pack(pady=14)
+        mensaje = tk.Label(zona, text="Revela las cartas de la mesa en orden.", font=("Segoe UI", 13, "bold"), bg=self.COLOR_PANEL_2, fg=self.COLOR_DORADO)
         mensaje.pack(pady=8)
         controles = tk.Frame(zona, bg=self.COLOR_PANEL_2)
         controles.pack(pady=8)
@@ -702,31 +834,45 @@ class CasinoApp:
         def dibujar(mostrar_bot=False, animar=False):
             self.dibujar_mesa_premium(canvas, "POKER")
             canvas.create_text(120, 83, text="BOT", fill="white", font=("Segoe UI", 15, "bold"))
-            canvas.create_text(540, 170, text="MESA", fill="white", font=("Segoe UI", 15, "bold"))
-            canvas.create_text(120, 302, text="JUGADOR", fill="white", font=("Segoe UI", 15, "bold"))
+            canvas.create_text(545, 160, text="CARTAS DE MESA", fill="white", font=("Segoe UI", 14, "bold"))
+            canvas.create_text(120, 304, text="JUGADOR", fill="white", font=("Segoe UI", 15, "bold"))
+            canvas.create_rectangle(835, 145, 1040, 245, fill="#092B22", outline=self.COLOR_DORADO, width=2)
+            canvas.create_text(938, 178, text=f"Apuesta", fill=self.COLOR_TEXTO_SUAVE, font=("Segoe UI", 11, "bold"))
+            canvas.create_text(938, 214, text=f"{apuesta.monto} fichas", fill=self.COLOR_DORADO, font=("Segoe UI", 16, "bold"))
+
             for i, carta in enumerate(juego.mano_oponente):
-                x, y = 92 + i * 88, 105
-                self.dibujar_carta(canvas, x, y, carta, oculta=not mostrar_bot)
+                self.dibujar_carta(canvas, 92 + i * 88, 105, carta, oculta=not mostrar_bot)
             for i, carta in enumerate(juego.cartas_mesa):
-                x, y = 330 + i * 88, 195
-                if animar: self.animar_carta_desde_mazo(canvas, x, y, carta)
+                x, y = 330 + i * 88, 188
+                if animar:
+                    self.animar_carta_desde_mazo(canvas, x, y, carta)
                 self.dibujar_carta(canvas, x, y, carta)
             for i, carta in enumerate(juego.mano_jugador):
                 self.dibujar_carta(canvas, 92 + i * 88, 322, carta)
 
         def limpiar_controles():
-            for widget in controles.winfo_children(): widget.destroy()
+            for widget in controles.winfo_children():
+                widget.destroy()
 
         def hacer_flop():
-            juego.flop(); mensaje.config(text="Flop revelado."); dibujar(animar=True)
+            juego.flop()
+            mensaje.config(text="Flop revelado. Sigue con el turn.")
+            dibujar(animar=True)
+
         def hacer_turn():
-            juego.turn(); mensaje.config(text="Turn revelado."); dibujar(animar=True)
+            juego.turn()
+            mensaje.config(text="Turn revelado. Falta el river.")
+            dibujar(animar=True)
+
         def hacer_river():
-            juego.river(); dibujar(True, animar=True)
+            juego.river()
+            dibujar(True, animar=True)
             resultado = juego.jugar(apuesta)
-            jugador = self.casino.obtener_jugador(); jugador.sumar_fichas(resultado.recompensa)
-            mensaje.config(text=resultado.mensaje)
-            limpiar_controles(); self.crear_boton(controles, "Volver al menú", self.pantalla_menu, 18).pack(side="left", padx=8)
+            jugador = self.casino.obtener_jugador()
+            jugador.sumar_fichas(resultado.recompensa)
+            mensaje.config(text=resultado.mensaje, fg="#95D5B2" if resultado.gano else self.COLOR_ERROR)
+            limpiar_controles()
+            self.crear_boton(controles, "Volver al menú", self.pantalla_menu, 18).pack(side="left", padx=8)
 
         dibujar()
         self.crear_boton(controles, "Flop", hacer_flop, 14).pack(side="left", padx=8)
@@ -734,71 +880,111 @@ class CasinoApp:
         self.crear_boton(controles, "River", hacer_river, 14).pack(side="left", padx=8)
         self.crear_boton(controles, "Volver", self.pantalla_menu, 14).pack(side="left", padx=8)
 
-    # ---------------- CARRERA ---------------- #
+    # ========================================================
+    # CARRERA
+    # ========================================================
 
     def dibujar_caballo_silueta(self, canvas, x, y, fase=0, escala=0.62, color="#111111", tag=""):
-        canvas.create_polygon(x+30*escala,y+45*escala,x+75*escala,y+20*escala,x+135*escala,y+32*escala,x+165*escala,y+55*escala,x+120*escala,y+70*escala,x+70*escala,y+70*escala,fill=color,smooth=True,tags=tag)
-        canvas.create_polygon(x+125*escala,y+28*escala,x+160*escala,y-10*escala,x+190*escala,y+8*escala,x+165*escala,y+45*escala,fill=color,smooth=True,tags=tag)
-        canvas.create_polygon(x+185*escala,y+2*escala,x+230*escala,y+10*escala,x+220*escala,y+30*escala,x+180*escala,y+22*escala,fill=color,smooth=True,tags=tag)
-        canvas.create_polygon(x+190*escala,y-4*escala,x+198*escala,y-20*escala,x+205*escala,y-2*escala,fill=color,tags=tag)
-        canvas.create_line(x+25*escala,y+48*escala,x-15*escala,y+15*escala,fill=color,width=max(3,int(10*escala)),smooth=True,tags=tag)
-        patas = [(80,65,60,120),(105,65,120,122),(130,65,112,120),(150,60,168,118)] if fase % 2 == 0 else [(80,65,98,120),(105,65,90,122),(130,65,150,120),(150,60,132,118)]
-        for x1,y1,x2,y2 in patas:
-            canvas.create_line(x+x1*escala,y+y1*escala,x+x2*escala,y+y2*escala,fill=color,width=max(3,int(9*escala)),smooth=True,tags=tag)
+        # Cuerpo
+        canvas.create_polygon(
+            x + 30 * escala, y + 45 * escala,
+            x + 75 * escala, y + 20 * escala,
+            x + 135 * escala, y + 32 * escala,
+            x + 165 * escala, y + 55 * escala,
+            x + 120 * escala, y + 70 * escala,
+            x + 70 * escala, y + 70 * escala,
+            fill=color, smooth=True, tags=tag,
+        )
+        # Cuello, cabeza y oreja
+        canvas.create_polygon(x + 125 * escala, y + 28 * escala, x + 160 * escala, y - 10 * escala, x + 190 * escala, y + 8 * escala, x + 165 * escala, y + 45 * escala, fill=color, smooth=True, tags=tag)
+        canvas.create_polygon(x + 185 * escala, y + 2 * escala, x + 230 * escala, y + 10 * escala, x + 220 * escala, y + 30 * escala, x + 180 * escala, y + 22 * escala, fill=color, smooth=True, tags=tag)
+        canvas.create_polygon(x + 190 * escala, y - 4 * escala, x + 198 * escala, y - 20 * escala, x + 205 * escala, y - 2 * escala, fill=color, tags=tag)
+        # Cola
+        cola_y = y + (11 if fase % 2 == 0 else 21) * escala
+        canvas.create_line(x + 28 * escala, y + 48 * escala, x - 18 * escala, cola_y, fill=color, width=max(3, int(10 * escala)), smooth=True, tags=tag)
+        # Patas animadas
+        if fase % 2 == 0:
+            patas = [(80, 65, 57, 120), (105, 65, 124, 122), (130, 65, 108, 120), (150, 60, 172, 118)]
+        else:
+            patas = [(80, 65, 100, 120), (105, 65, 86, 122), (130, 65, 154, 120), (150, 60, 128, 118)]
+        for x1, y1, x2, y2 in patas:
+            canvas.create_line(x + x1 * escala, y + y1 * escala, x + x2 * escala, y + y2 * escala, fill=color, width=max(3, int(9 * escala)), smooth=True, tags=tag)
 
     def pantalla_carrera(self, apuesta: Apuesta):
-        self.limpiar(); self.panel_saldo(self.contenedor)
+        self.limpiar()
+        self.panel_saldo(self.contenedor)
         juego: CarreraCaballo = self.casino.seleccionar_juego("carrera")
-        zona = tk.Frame(self.contenedor, bg=self.COLOR_PANEL_2); zona.pack(fill="both", expand=True, padx=20, pady=10)
-        canvas = tk.Canvas(zona, width=1080, height=445, bg="#123C52", highlightthickness=0); canvas.pack(pady=15)
-        mensaje = tk.Label(zona, text="Selecciona el caballo por el que vas a apostar.", font=("Segoe UI", 13, "bold"), bg=self.COLOR_PANEL_2, fg=self.COLOR_DORADO); mensaje.pack(pady=8)
-        controles = tk.Frame(zona, bg=self.COLOR_PANEL_2); controles.pack(pady=8)
+
+        zona = tk.Frame(self.contenedor, bg=self.COLOR_PANEL_2)
+        zona.pack(fill="both", expand=True, padx=20, pady=10)
+        canvas = tk.Canvas(zona, width=1100, height=455, bg="#123C52", highlightthickness=0)
+        canvas.pack(pady=14)
+        mensaje = tk.Label(zona, text="Selecciona el caballo por el que vas a apostar.", font=("Segoe UI", 13, "bold"), bg=self.COLOR_PANEL_2, fg=self.COLOR_DORADO)
+        mensaje.pack(pady=8)
+        controles = tk.Frame(zona, bg=self.COLOR_PANEL_2)
+        controles.pack(pady=8)
         caballo_elegido = {"caballo": None}
-        objetos = []
 
         def dibujar_pista(fase=0):
-            canvas.delete("all"); objetos.clear()
-            canvas.create_rectangle(0,0,1080,445,fill="#123C52",outline="")
-            canvas.create_text(540, 32, text="GRAN CARRERA LA MALDAD", fill=self.COLOR_DORADO, font=("Segoe UI", 21, "bold"))
-            meta_x = 900
-            for y in range(70, 400, 22):
+            canvas.delete("all")
+            canvas.create_rectangle(0, 0, 1100, 455, fill="#123C52", outline="")
+            canvas.create_rectangle(0, 0, 1100, 70, fill="#0B2536", outline="")
+            canvas.create_text(550, 32, text="GRAN CARRERA LA MALDAD", fill=self.COLOR_DORADO, font=("Segoe UI", 22, "bold"))
+            canvas.create_text(550, 58, text=f"Apuesta activa: {apuesta.monto} fichas", fill=self.COLOR_TEXTO_SUAVE, font=("Segoe UI", 10, "bold"))
+
+            meta_x = 910
+            for y in range(74, 410, 22):
                 color = "white" if (y // 22) % 2 == 0 else "black"
                 canvas.create_rectangle(meta_x, y, meta_x + 34, y + 22, fill=color, outline=color)
-            canvas.create_line(meta_x, 70, meta_x, 400, fill=self.COLOR_DORADO, width=3)
+            canvas.create_line(meta_x, 74, meta_x, 410, fill=self.COLOR_DORADO, width=3)
+            canvas.create_text(meta_x + 52, 84, text="META", fill=self.COLOR_DORADO, font=("Segoe UI", 11, "bold"), angle=90)
+
             colores = ["#111111", "#2B1608", "#071A2C"]
             for i, caballo in enumerate(juego.lista_caballos):
-                y = 100 + i * 100
-                canvas.create_rectangle(50, y + 78, 955, y + 83, fill="#E8D7A2", outline="")
-                canvas.create_line(60, y + 84, 955, y + 84, fill="white", dash=(10, 10))
+                y = 105 + i * 103
+                canvas.create_rectangle(45, y + 80, 970, y + 88, fill="#B68D40", outline="")
+                canvas.create_line(60, y + 91, 970, y + 91, fill="white", dash=(10, 10))
+                canvas.create_rectangle(50, y - 12, 165, y + 20, fill="#0B2536", outline=self.COLOR_DORADO)
+                canvas.create_text(108, y + 4, text=caballo.nombre, fill="white", font=("Segoe UI", 10, "bold"))
                 tag = f"caballo_{i}"
-                self.dibujar_caballo_silueta(canvas, 70 + caballo.posicion, y, fase, 0.62, colores[i], tag)
-                canvas.create_text(88 + caballo.posicion, y + 88, text=caballo.nombre, fill="white", font=("Segoe UI", 11, "bold"), anchor="w", tags=tag)
-                objetos.append((tag, caballo))
+                self.dibujar_caballo_silueta(canvas, 75 + caballo.posicion, y, fase, 0.62, colores[i], tag)
+                if caballo_elegido["caballo"] == caballo:
+                    canvas.create_text(75 + caballo.posicion, y - 25, text="★ TU APUESTA", fill=self.COLOR_DORADO, font=("Segoe UI", 9, "bold"), anchor="w")
 
         def seleccionar(caballo: Caballo):
             caballo_elegido["caballo"] = caballo
-            mensaje.config(text=f"Apostaste por {caballo.nombre}. Ahora inicia la carrera.")
+            mensaje.config(text=f"Apostaste por {caballo.nombre}. Ahora inicia la carrera.", fg=self.COLOR_DORADO)
+            dibujar_pista()
 
         def limpiar_controles():
-            for widget in controles.winfo_children(): widget.destroy()
+            for widget in controles.winfo_children():
+                widget.destroy()
 
         def correr():
             if caballo_elegido["caballo"] is None:
-                mensaje.config(text="Primero debes seleccionar un caballo."); return
-            limpiar_controles(); meta_x = 900; ganador = None; fase = 0
-            for caballo in juego.lista_caballos: caballo.posicion = 0
+                mensaje.config(text="Primero debes seleccionar un caballo.", fg=self.COLOR_ERROR)
+                return
+            limpiar_controles()
+            meta_x = 910
+            ganador = None
+            fase = 0
+            for caballo in juego.lista_caballos:
+                caballo.posicion = 0
             while ganador is None:
                 fase += 1
                 for caballo in juego.lista_caballos:
                     caballo.posicion += random.randint(6, 23)
-                    if 70 + caballo.posicion + 145 >= meta_x:
-                        ganador = caballo; break
+                    if 75 + caballo.posicion + 145 >= meta_x:
+                        ganador = caballo
+                        break
                 dibujar_pista(fase)
-                canvas.update(); self.ventana.after(45)
+                canvas.update()
+                self.ventana.after(38)
             juego.caballo_ganador = ganador
             resultado = juego.jugar(apuesta, caballo_elegido["caballo"])
-            jugador = self.casino.obtener_jugador(); jugador.sumar_fichas(resultado.recompensa)
-            mensaje.config(text=resultado.mensaje)
+            jugador = self.casino.obtener_jugador()
+            jugador.sumar_fichas(resultado.recompensa)
+            mensaje.config(text=resultado.mensaje, fg="#95D5B2" if resultado.gano else self.COLOR_ERROR)
             self.crear_boton(controles, "Volver al menú", self.pantalla_menu, 18).pack(side="left", padx=8)
 
         dibujar_pista()
