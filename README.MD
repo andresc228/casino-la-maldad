@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="casino/banner.png" alt="Casino La Maldad Banner">
+  <img src="casino_la_maldad/banner.png" alt="Casino La Maldad Banner">
 </p>
 
 Casino la maldad es una aplicación desarrollada en Python que busca recrear la
